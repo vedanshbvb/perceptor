@@ -1,3 +1,5 @@
 streamlit
 PyPDF2
 python-dateutil
+google-genai
+python-dotenv
