@@ -74,7 +74,7 @@ $$\text{Section Confidence} = 10 \times \frac{|A \cap B|}{|A \cup B|}$$
 
 The overall confidence score is the average of all five section confidences (with a total possible scale out of 10):
 
-$$\text{Final Confidence} = \frac{\text{name\_conf} + \text{email\_conf} + \text{links\_conf} + \text{skills\_conf} + \text{exp\_conf} + \text{edu\_conf}}{6}$$
+$$ \text{Final Confidence} = \frac{\text{name\_conf} + \text{email\_conf} + \text{links\_conf} + \text{skills\_conf} + \text{exp\_conf} + \text{edu\_conf}}{6} $$
 
 
 ---
