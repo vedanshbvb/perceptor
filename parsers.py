@@ -151,6 +151,11 @@ def parse_resume_pdf(file_bytes: bytes) -> dict:
         
         # 4. Parse JSON and apply the anti-hallucination check
         parsed_data = json.loads(response.text)
+
+        print("\n=== RAW LLM JSON OUTPUT ===")
+        print(json.dumps(parsed_data, indent=4))
+        print("===========================\n")
+
         verified_data = verify_no_hallucinations(parsed_data, text)
         return verified_data
 
