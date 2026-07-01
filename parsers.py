@@ -77,7 +77,8 @@ def parse_resume_pdf(file_bytes: bytes) -> dict:
     4. The provenance field must be a list of arrays. For every key you populate, add an array formatted as ["field_name", "resume", "llm"].
     5. If there is no information for some field of the schema, just leave that field empty.
     6. For the summary part of the experience, keep it exactly same as what is mentioned in the resume.
-    7. Do NOT make up information by yourself and do NOT hallucinate
+    7. For the rating of the skill, always keep it as 8.
+    8. Do NOT make up information by yourself and do NOT hallucinate
 
     Required JSON Schema:
     {{
