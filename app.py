@@ -51,6 +51,8 @@ if st.button("Process Documents"):
 
         # Process Resumes
         if resume_files:
+            import os
+            os.makedirs("outputs", exist_ok=True)
             for pdf in resume_files:
                 raw_pdf_dict = parse_resume_pdf(pdf.read())
                 field_normalized = field_norm.normalize(raw_pdf_dict, source_type="resume")
@@ -59,9 +61,17 @@ if st.button("Process Documents"):
                 phone = final_data.get("phone")
                 if phone:
                     resume_records[phone] = final_data
+                
+                # Save normalized resume JSON
+                base_name = os.path.splitext(pdf.name)[0]
+                output_path = os.path.join("outputs", f"{base_name}_normalized.json")
+                with open(output_path, "w", encoding="utf-8") as f:
+                    json.dump(final_data, f, indent=4)
 
         # Process ATS JSONs
         if ats_files:
+            import os
+            os.makedirs("outputs", exist_ok=True)
             for json_file in ats_files:
                 raw_json_dict = parse_ats_json(json_file.read())
                 field_normalized = field_norm.normalize(raw_json_dict, source_type="ats")
@@ -70,6 +80,12 @@ if st.button("Process Documents"):
                 phone = final_data.get("phone")
                 if phone:
                     ats_records[phone] = final_data
+
+                # Save normalized ATS JSON
+                base_name = os.path.splitext(json_file.name)[0]
+                output_path = os.path.join("outputs", f"{base_name}_normalized.json")
+                with open(output_path, "w", encoding="utf-8") as f:
+                    json.dump(final_data, f, indent=4)
 
         # Merge & Project Layer
         st.subheader("Final Configured Profiles")
