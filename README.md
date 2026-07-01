@@ -2,6 +2,81 @@
 
 Perceptor is a multi-source candidate data transformer. It extracts, normalizes, merges, and projects candidate profiles from resumes (PDFs) and ATS data (JSONs) into a customizable canonical schema.
 
+To see how to install and get started, see below
+
+
+## Merges and conflict resolution- and how that affects confidence
+
+<img src="merging_example.jpeg" alt="Flow Diagram" width="350">
+
+Here is the improved, highly scannable version of your data merging logic. I've organized it into logical sections, highlighted the key operations, and formatted the math cleanly so it's much easier to read and implement.
+
+---
+
+
+
+### Basic Information
+
+* **Name:** Pick the longer string.
+* *Confidence:* If names are an exact match across both sources, `name_confidence = 10`. Otherwise, `name_confidence = 9`.
+
+
+* **Email:** Take the union of both sources.
+* *Confidence:* If emails are an exact match across both sources, `email_confidence = 10`. Otherwise, `email_confidence = 9`.
+
+
+* **Links:** Take the union of both sources.
+* *Confidence:* If links are an exact match across both sources, `link_confidence = 10`. Otherwise, `link_confidence = 9`.
+
+
+
+### Section Merging Rules
+
+#### 1. Skills
+
+* **Grouping:** Merge by unique `skillname`.
+* **Conflict Resolution:** If a unique skill name exists in multiple tuples:
+* Take the **mean** of the ratings.
+* Take the **union** of the sources.
+
+
+
+#### 2. Experience
+
+* **Grouping:** Merge by unique `company`.
+* **Conflict Resolution:** If a unique company exists in multiple tuples:
+* Take the **longest** `title`.
+* Take the **longest** `summary`.
+* Keep dates **only if they are an exact match**; otherwise, drop the dates entirely.
+
+
+
+#### 3. Education
+
+* **Grouping:** Merge by unique `institute_name`.
+* **Conflict Resolution:** If a unique institute name exists in multiple tuples:
+* Take the `degree` with the most characters (longest string).
+* Take the `field` and `end_year` pair from the tuple where `end_year` is the largest.
+
+
+
+---
+
+### Confidence Score Calculations
+
+For **Skills**, **Experience**, and **Education**, the confidence score is calculated based on the Jaccard index of their elements:
+
+$$\text{Section Confidence} = 10 \times \frac{|A \cap B|}{|A \cup B|}$$
+
+*Where $A$ is the set of elements in Source 1, and $B$ is the set of elements in Source 2.*
+
+### Final Weighted Confidence
+
+The overall confidence score is the average of all five section confidences (with a total possible scale out of 10):
+
+$$\text{Final Confidence} = \frac{\text{name\_conf} + \text{email\_conf} + \text{links\_conf} + \text{skills\_conf} + \text{exp\_conf} + \text{edu\_conf}}{6}$$
+
+
 ---
 
 ## Getting Started
